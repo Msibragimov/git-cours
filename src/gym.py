@@ -1,5 +1,6 @@
 import csv
 from typing import List
+from random import choice
 
 from .person import Customer, Employee
 
@@ -48,3 +49,8 @@ class Gym:
                     'remaining_visits': int(customer._remaining_visits),
                     'total_visits': int(customer._total_visits)
                 })
+
+    def paly_out_visits(self, visits_count=10):
+        customers = [c for c in self._customers if c._is_active]
+        winner = choice(customers)
+        winner.add_visits(visits_count*self.DEFAULT_VISIT_PRICE)
