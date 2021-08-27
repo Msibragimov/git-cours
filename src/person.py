@@ -69,7 +69,9 @@ class Customer(Person):
             raise Exception('No remaining visits')
         self._remaining_visits -= 1
         self._total_visits += 1
-        
+        if self._total_visits%5 == 0:
+            self._remaining_visits += 1
+
     @property
     def is_active(self):
         return self._is_active
@@ -79,5 +81,4 @@ class Customer(Person):
 
     def unlock(self):
         self._is_active = True
-        if self._total_visits%5 == 0:
-            self._remaining_visits += 1
+        
