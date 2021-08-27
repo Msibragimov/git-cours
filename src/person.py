@@ -1,4 +1,6 @@
 from enum import Enum
+from src.discount import Discount
+from typing import List
 
 
 class Person:
@@ -53,13 +55,26 @@ class Customer(Person):
         self._total_visits = 0
         self._is_active = True
 
-    def add_visits(self, amount):
+    def add_visits(self, amount, discounts: List[Discount]=[]):
         from .gym import Gym
         visits = amount//Gym.DEFAULT_VISIT_PRICE
         if not visits:
             print('Not enough money to buy visits')
             return amount
+
+        max_persent_discount = None
+        for discount in discounts:
+            if discount.visits <= visits:
+                if max_persent_discount:
+                    if max_persent_discount.percent < discount.percent:
+                        max_persent_discount = discount
+                    else:
+                        max_persent_discount = discount
+        
         self._remaining_visits += visits
+        
+        if max_persent_discount:
+            return amount%Gym.DEFAULT_VISIT_PRICE + visits*Gym.DEFAULT_VISIT_PRICE*max_persent_discount.percent/100
         return amount%Gym.DEFAULT_VISIT_PRICE
 
     def visit_gym(self):

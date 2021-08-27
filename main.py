@@ -1,4 +1,5 @@
 import os
+from src.discount import Discount
 
 from src.gym import Gym
 from src.person import Customer, Employee, Person
@@ -46,8 +47,8 @@ if __name__ == '__main__':
         gender=Person.Gender.MALE
     )
     gym.add_customer(customer)
-    customer.add_visits(1)
-    print(customer.add_visits(100))
+    customer.add_visits(1, gym.discounts)
+    print(customer.add_visits(100, gym.discounts))
 
     customer = Customer(
         full_name='Beth Smith',
@@ -55,7 +56,7 @@ if __name__ == '__main__':
         gender=Person.Gender.FEMALE
     )
     gym.add_customer(customer)
-    customer.add_visits(5)
+    customer.add_visits(5, gym.discounts)
     customer.visit_gym()
 
     try:
@@ -65,3 +66,32 @@ if __name__ == '__main__':
 
     customers_file_path = os.path.join(os.path.dirname(__file__), 'data/customers.csv')
     gym.export_customers_info(customers_file_path)
+
+    gym.add_discount(Discount(10, 10))
+    gym.add_discount(Discount(20, 50))
+    gym.add_discount(Discount(40, 100))
+    customer = Customer(
+        full_name='Summer Smith',
+        age=19,
+        gender=Person.Gender.FEMALE
+    )
+    gym.add_customer(customer)
+    change = customer.add_visits(55*gym.DEFAULT_VISIT_PRICE, discounts=gym.discounts)
+    print(change)
+    for _ in range(5):
+        customer.visit_gym()
+    print(customer._remaining_visits)
+    customer.block()
+    try:
+        customer.visit_gym()
+    except Exception as e:
+        print(e)
+    customer.unlock()
+    customer.visit_gym()
+    print(customer._remaining_visits)
+
+    print()
+    for customer in gym._customers:
+        print(customer.full_name, customer._remaining_visits)
+    winner = gym.paly_out_visits()
+    print(winner.full_name, winner._remaining_visits)

@@ -3,6 +3,7 @@ from typing import List
 from random import choice
 
 from .person import Customer, Employee
+from .discount import Discount
 
 
 class Gym:
@@ -13,9 +14,18 @@ class Gym:
         self._name = name
         self._employees: List[Employee] = []
         self._customers: List[Customer] = []
+        self._discounts: List[Discount] = []
     
     def add_employee(self, employee: Employee):
         self._employees.append(employee)
+
+    @property
+    def customers(self):
+        return self._customers.copy()
+
+    @property
+    def discounts(self):
+        return self._discounts.copy()
 
     def add_customer(self, customer: Customer):
         self._customers.append(customer)
@@ -54,3 +64,7 @@ class Gym:
         customers = [c for c in self._customers if c._is_active]
         winner = choice(customers)
         winner.add_visits(visits_count*self.DEFAULT_VISIT_PRICE)
+        return winner
+
+    def add_discount(self, discount: Discount):
+        self._discounts.append(discount)
