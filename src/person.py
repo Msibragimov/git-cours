@@ -51,6 +51,7 @@ class Customer(Person):
         super().__init__(full_name, age, gender)
         self._remaining_visits = 0
         self._total_visits = 0
+        self._is_active = True
 
     def add_visits(self, amount):
         from .gym import Gym
