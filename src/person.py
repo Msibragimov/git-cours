@@ -63,6 +63,8 @@ class Customer(Person):
         return amount%Gym.DEFAULT_VISIT_PRICE
 
     def visit_gym(self):
+        if not self._is_active:
+            raise Exception('Block')
         if self._remaining_visits == 0:
             raise Exception('No remaining visits')
         self._remaining_visits -= 1
@@ -70,4 +72,13 @@ class Customer(Person):
         if self._total_visits%5 == 0:
             self._remaining_visits += 1
 
-            
+    @property
+    def is_active(self):
+        return self._is_active
+
+    def block(self):
+        self._is_active = False
+
+    def unlock(self):
+        self._is_active = True
+        
